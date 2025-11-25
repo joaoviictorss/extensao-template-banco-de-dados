@@ -2,11 +2,9 @@ services:
   - type: web
     name: crud-usuarios
     env: node
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && NODE_ENV=production npm start
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
-

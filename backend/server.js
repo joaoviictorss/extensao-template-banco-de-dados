@@ -1,6 +1,7 @@
 import express from "express";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { existsSync } from "fs";
 import { initDatabase, getUsers, getUserById, createUser, updateUser, deleteUser } from "./database/db.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -85,24 +86,33 @@ app.get("/health", (req, res) => {
 });
 
 if (NODE_ENV === "production") {
-  // Serve arquivos estáticos da pasta raiz do projeto
-  // No Render, se root directory for a raiz, funciona direto
-  // Se root for backend/, precisa copiar arquivos ou ajustar caminho
-  const publicPath = process.env.PUBLIC_PATH
-    ? join(__dirname, process.env.PUBLIC_PATH)
-    : join(__dirname, "..");
+  // Em produção, serve arquivos estáticos
+  // Primeiro tenta da pasta atual (backend/) - para Render (arquivos copiados no build)
+  // Se não encontrar, tenta da pasta pai - para desenvolvimento local
+  const currentPath = __dirname;
+  const parentPath = join(__dirname, "..");
 
-  app.use(express.static(publicPath));
+  // Tenta servir da pasta atual primeiro (onde os arquivos são copiados no build)
+  app.use(express.static(currentPath));
+
+  // Também tenta da pasta pai (caso esteja rodando localmente)
+  app.use(express.static(parentPath));
 
   app.get("*", (req, res) => {
     if (!req.path.startsWith("/api")) {
-      const indexPath = join(publicPath, "index.html");
-      res.sendFile(indexPath, (err) => {
-        if (err) {
-          console.error("Erro ao servir index.html:", err);
-          res.status(404).send("Arquivo não encontrado");
-        }
-      });
+      // Tenta index.html na pasta atual primeiro (Render)
+      const indexPathCurrent = join(currentPath, "index.html");
+      const indexPathParent = join(parentPath, "index.html");
+
+      // Verifica qual arquivo existe e serve
+      if (existsSync(indexPathCurrent)) {
+        res.sendFile(indexPathCurrent);
+      } else if (existsSync(indexPathParent)) {
+        res.sendFile(indexPathParent);
+      } else {
+        console.error("index.html não encontrado em nenhum dos caminhos");
+        res.status(404).send("index.html não encontrado");
+      }
     }
   });
 }

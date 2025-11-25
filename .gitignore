@@ -1,6 +1,9 @@
 node_modules/
 backend/node_modules/
 backend/database/users.db
+backend/index.html
+backend/app.js
+backend/styles.css
 *.log
 .DS_Store
 
