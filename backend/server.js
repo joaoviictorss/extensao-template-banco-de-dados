@@ -8,7 +8,7 @@ const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const NODE_ENV = process.env.NODE_ENV || "development";
+const NODE_ENV = process.env.NODE_ENV || (process.env.RENDER ? "production" : "development");
 
 app.use(express.json());
 
@@ -85,12 +85,24 @@ app.get("/health", (req, res) => {
 });
 
 if (NODE_ENV === "production") {
-  const publicPath = join(__dirname, "..");
+  // Serve arquivos estáticos da pasta raiz do projeto
+  // No Render, se root directory for a raiz, funciona direto
+  // Se root for backend/, precisa copiar arquivos ou ajustar caminho
+  const publicPath = process.env.PUBLIC_PATH
+    ? join(__dirname, process.env.PUBLIC_PATH)
+    : join(__dirname, "..");
+
   app.use(express.static(publicPath));
 
   app.get("*", (req, res) => {
     if (!req.path.startsWith("/api")) {
-      res.sendFile(join(publicPath, "index.html"));
+      const indexPath = join(publicPath, "index.html");
+      res.sendFile(indexPath, (err) => {
+        if (err) {
+          console.error("Erro ao servir index.html:", err);
+          res.status(404).send("Arquivo não encontrado");
+        }
+      });
     }
   });
 }
