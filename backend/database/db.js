@@ -10,7 +10,6 @@ const dbPath = join(__dirname, "users.db");
 let db;
 
 const promisifyDb = (db) => {
-  // Wrapper para db.run que preserva lastID e changes
   db.runAsync = (sql, params = []) => {
     return new Promise((resolve, reject) => {
       db.run(sql, params, function (err) {
@@ -43,7 +42,6 @@ export const initDatabase = () => {
 
       db = promisifyDb(db);
 
-      // Criar tabela de usuários se não existir
       db.runAsync(
         `CREATE TABLE IF NOT EXISTS users (
           id INTEGER PRIMARY KEY AUTOINCREMENT,

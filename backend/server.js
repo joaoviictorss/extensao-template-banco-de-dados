@@ -86,25 +86,17 @@ app.get("/health", (req, res) => {
 });
 
 if (NODE_ENV === "production") {
-  // Em produção, serve arquivos estáticos
-  // Primeiro tenta da pasta atual (backend/) - para Render (arquivos copiados no build)
-  // Se não encontrar, tenta da pasta pai - para desenvolvimento local
   const currentPath = __dirname;
   const parentPath = join(__dirname, "..");
 
-  // Tenta servir da pasta atual primeiro (onde os arquivos são copiados no build)
   app.use(express.static(currentPath));
-
-  // Também tenta da pasta pai (caso esteja rodando localmente)
   app.use(express.static(parentPath));
 
   app.get("*", (req, res) => {
     if (!req.path.startsWith("/api")) {
-      // Tenta index.html na pasta atual primeiro (Render)
       const indexPathCurrent = join(currentPath, "index.html");
       const indexPathParent = join(parentPath, "index.html");
 
-      // Verifica qual arquivo existe e serve
       if (existsSync(indexPathCurrent)) {
         res.sendFile(indexPathCurrent);
       } else if (existsSync(indexPathParent)) {

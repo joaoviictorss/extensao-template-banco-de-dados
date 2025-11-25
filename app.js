@@ -16,7 +16,6 @@ const getApiUrl = () => {
 
 const API_URL = getApiUrl();
 
-// Variáveis globais
 let userForm;
 let formTitle;
 let userIdInput;
@@ -29,9 +28,7 @@ let usersTbody;
 let userCount;
 let editingUserId = null;
 
-// Inicializar quando o DOM estiver pronto
 document.addEventListener("DOMContentLoaded", () => {
-  // Elementos do DOM
   userForm = document.getElementById("user-form");
   formTitle = document.getElementById("form-title");
   userIdInput = document.getElementById("user-id");
@@ -43,7 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
   usersTbody = document.getElementById("users-tbody");
   userCount = document.getElementById("user-count");
 
-  // Event Listeners
   if (userForm) {
     userForm.addEventListener("submit", handleSubmit);
   }
@@ -51,11 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
     cancelBtn.addEventListener("click", resetForm);
   }
 
-  // Carregar usuários ao iniciar
   loadUsers();
 });
-
-// Funções CRUD
 async function loadUsers() {
   try {
     const response = await fetch(API_URL);
@@ -133,7 +126,6 @@ async function editUser(id) {
     formTitle.textContent = "Editar Usuário";
     cancelBtn.style.display = "block";
 
-    // Scroll para o formulário
     document.querySelector(".form-section").scrollIntoView({ behavior: "smooth" });
   } catch (error) {
     console.error("Erro:", error);
@@ -220,7 +212,6 @@ function showError(message) {
   `;
 }
 
-// Expor funções globalmente para uso nos botões onclick
 window.editUser = editUser;
 window.deleteUser = deleteUser;
 
