@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRUD de Usuários</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Gerenciamento de Usuários</h1>
+      </header>
+
+      <main>
+        <section class="form-section">
+          <h2 id="form-title">Cadastrar Novo Usuário</h2>
+          <form id="user-form" class="user-form">
+            <input type="hidden" id="user-id" name="id" />
+
+            <div class="form-group">
+              <label for="name">Nome Completo</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                placeholder="Digite o nome completo"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="Digite o e-mail"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Telefone</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="(00) 00000-0000"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="age">Idade</label>
+              <input
+                type="number"
+                id="age"
+                name="age"
+                min="1"
+                max="120"
+                placeholder="Digite a idade"
+              />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Salvar</button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="cancel-btn"
+                style="display: none"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="list-section">
+          <div class="section-header">
+            <h2>Usuários Cadastrados</h2>
+            <span class="user-count" id="user-count">0 usuário(s)</span>
+          </div>
+
+          <div class="table-container">
+            <table id="users-table" class="users-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>E-mail</th>
+                  <th>Telefone</th>
+                  <th>Idade</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody">
+                <tr class="empty-state">
+                  <td colspan="6">Nenhum usuário cadastrado ainda.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
